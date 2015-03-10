@@ -17,7 +17,6 @@ class WeechatEnsController < ApplicationController
   end
 
   def create
-    user = User.find(params[:id])
     @timestamp,@nonce = Time.now.to_i.to_s,"1234"
 
     client = WeechatClientEnApp.new(Setting[:aeskey],Setting[:token])

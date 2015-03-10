@@ -6,3 +6,4 @@
 defaults: &defaults
   aeskey: ""
   token: ""
+  corp_id: ""
