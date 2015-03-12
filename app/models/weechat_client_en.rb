@@ -5,7 +5,7 @@ require 'digest/sha1'
 require 'nokogiri'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
-class WeechatClientEnApp
+class WeechatClientEn
   
   include WeechatClientHttp
   include WeechatClientEnAes

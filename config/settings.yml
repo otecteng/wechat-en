@@ -4,6 +4,10 @@
 # Mime::Type.register "text/richtext", :rtf
 # Mime::Type.register_alias "text/html", :iphone
 defaults: &defaults
-  aeskey: ""
-  token: ""
+  aeskey: "r0jJjvvm2DzCIf59lsL3JBQDXSFAtahSfEQ9fpdvaOt="
+  token: "dYAeWYc"
   corp_id: ""
+production:
+  <<: *defaults
+development:
+  <<: *defaults
