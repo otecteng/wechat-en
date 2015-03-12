@@ -3,10 +3,8 @@ class WechatesController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def index
-    if params[:id]
-      client = WeechatClientEn.new(Setting[:aeskey],Setting[:token])
-      result = client.decode(params[:echostr],params[:timestamp],params[:nonce],params[:msg_signature])
-    end
+    client = WeechatClientEn.new(Setting[:aeskey],Setting[:token])
+    result = client.decode(params[:echostr],params[:timestamp],params[:nonce],params[:msg_signature])
     render :text=>result
   end
 
