@@ -1,7 +1,7 @@
 require 'faraday'
 require "openssl"
 
-module WeechatClientHttp
+module WechateClientHttp
   def api_get(url,args={})
     get_api_token unless @access_token
     url = "#{@urls[url]}?"

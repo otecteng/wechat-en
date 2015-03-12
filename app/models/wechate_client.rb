@@ -5,10 +5,10 @@ require 'digest/sha1'
 require 'nokogiri'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
-class WeechatClientEn
+class WechateClient
   
-  include WeechatClientHttp
-  include WeechatClientEnAes
+  include WechateClientHttp
+  include WechateClientAes
 
   def initialize aeskey,token,appid=nil,secret=nil
     @host_api = 'https://qyapi.weixin.qq.com'
@@ -95,29 +95,26 @@ class WeechatClientEn
   end
 
   def get_response xml
-      ret = ""
-      msg_type = xml.xpath("//MsgType").text
-      fromUserName = xml.xpath("//FromUserName").text
-      site = Site.find_by_wid(fromUserName)
-      if msg_type == "image" then
-        pic = xml.xpath("//PicUrl").text
-        ret = []
+    Rails.logger.info "===============>>"
+    Rails.logger.info xml
+    Rails.logger.info "===============<<"
+    msg_type = xml.xpath("//MsgType").text
+    fromUserName = xml.xpath("//FromUserName").text
+    ret = case msg_type
+    when "image"
+      image_callback(xml.xpath("//PicUrl").text)
+    when msg_type=="event"
+      event = xml.xpath("//Event").text
+      event_key = xml.xpath("//EventKey").text
+      ret = case event 
+      when "click"
+        event_callback(event,event_key)
+      when "scancode_waitmsg"
+        "" # event_callback(event,event_key,xml.xpath("//ScanResult").text)
+      when "location_select"
+        ""
       end
-      if msg_type=="event" then
-        event = xml.xpath("//Event").text
-        event_key = xml.xpath("//EventKey").text
-        if event == "click" && event_key == "m11" then
-          ret = []
-        end
-        if event == "scancode_waitmsg" && event_key == "m24" then
-          scan_result = xml.xpath("//ScanResult").text
-          ret = "scan ok"
-        end
-        if event == "location_select" && event_key == "m32" then
-          ret = "location ok"
-        end
-      end
-      return ret
+    end
   end
 
   def build_text fromUserName,toUserName,timestamp,response

@@ -2,7 +2,7 @@ require "base64"
 require "openssl"
 require 'digest/sha1'
 
-module WeechatClientEnAes
+module WechateClientAes
   def pad text
     text_length = text.length
     amount_to_pad = 32 - (text_length % 32)
