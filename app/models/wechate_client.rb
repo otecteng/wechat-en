@@ -78,20 +78,20 @@ class WechateClient
   end
 
   def pong message,timestamp,nonce
-      xml = Nokogiri::XML(message)
-      fromUserName = xml.xpath("//FromUserName").text
-      toUserName = xml.xpath("//ToUserName").text
-      timestamp = Time.now.to_i.to_s
-      response = get_response(xml)
-      msg_encrypt = case response
-      when String
-        build_text(fromUserName,toUserName,timestamp,response)
-      when Array
-        build_news(fromUserName,toUserName,timestamp,response)
-      when URI
-        build_image(fromUserName,toUserName,timestamp,response)
-      end
-      encode(msg_encrypt,timestamp,nonce,toUserName)
+    xml = Nokogiri::XML(message)
+    fromUserName = xml.xpath("//FromUserName").text
+    toUserName = xml.xpath("//ToUserName").text
+    timestamp = Time.now.to_i.to_s
+    response = get_response(xml)
+    msg_encrypt = case response
+    when String
+      build_text(fromUserName,toUserName,timestamp,response)
+    when Array
+      build_news(fromUserName,toUserName,timestamp,response)
+    when URI
+      build_image(fromUserName,toUserName,timestamp,response)
+    end
+    encode(msg_encrypt,timestamp,nonce,toUserName)
   end
 
   def get_response xml
@@ -101,7 +101,7 @@ class WechateClient
     msg_type = xml.xpath("//MsgType").text
     fromUserName = xml.xpath("//FromUserName").text
     agent_id =  xml.xpath("//AgentID").text
-    worker = WechateWorker.create(WechateWorker3)
+    worker = WechateWorker.create_worker(WechateWorker3)
     ret = case msg_type
     when "event"
       event = xml.xpath("//Event").text
