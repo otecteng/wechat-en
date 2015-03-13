@@ -100,19 +100,40 @@ class WechateClient
     Rails.logger.info "===============<<"
     msg_type = xml.xpath("//MsgType").text
     fromUserName = xml.xpath("//FromUserName").text
+    agent_id =  xml.xpath("//AgentID").text
+    worker = WechateWorker.create(WechateWorker3)
     ret = case msg_type
-    when "image"
-      image_callback(xml.xpath("//PicUrl").text)
-    when msg_type=="event"
+    when "event"
       event = xml.xpath("//Event").text
       event_key = xml.xpath("//EventKey").text
       ret = case event 
       when "click"
-        event_callback(event,event_key)
+        worker.click_callback(event,event_key)
+      when "scancode_push"
       when "scancode_waitmsg"
-        "" # event_callback(event,event_key,xml.xpath("//ScanResult").text)
+        worker.scancode_callback(event,event_key,xml.xpath("//ScanResult").text)
       when "location_select"
-        ""
+        
+      end
+    else
+      msg_id = xml.xpath("//MsgId").text
+      case msg_type 
+      when "text"
+        worker.text_callback(msg_id,xml.xpath("//PicUrl").text)
+      when "image"
+        args = {:pic=>xml.xpath("//PicUrl").text,
+          :media_id=>xml.xpath("//MediaId").text}
+        worker.image_callback(msg_id,args)
+      when "location"
+        args = {:location=>{:lat=>xml.xpath("//Location_X").text,
+          :lng=>xml.xpath("//Location_Y").text},
+        :scale=>xml.xpath("//Scale").text,
+        :lable=>xml.xpath("//Label").text}
+        worker.location_callback(msg_id,args)
+      when "voice"
+        args = {:format=>xml.xpath("//Format").text,
+          :media_id=>xml.xpath("//MediaId").text}
+        worker.voice_callback(msg_id,args)
       end
     end
   end

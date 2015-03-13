@@ -1,8 +1,4 @@
-class WechateWorker
-
-  def self.create_worker(worker)
-    worker.new
-  end
+class WechateWorker3
 
   def text_callback(msg_id,text)
   end
