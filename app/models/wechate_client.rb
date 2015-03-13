@@ -108,35 +108,35 @@ class WechateClient
       event_key = xml.xpath("//EventKey").text
       ret = case event 
       when "click"
-        worker.click_callback(event,event_key)
+        worker.click_callback(fromUserName,event,event_key)
       when "scancode_push"
       when "scancode_waitmsg"      
-        worker.scancode_callback(event,event_key,xml.xpath("//ScanResult").text)
+        worker.scancode_callback(fromUserName,event,event_key,xml.xpath("//ScanResult").text)
       when "location_select"
       when "pic_photo_or_album"
-        worker.unknown_event(event,event_key)
+        worker.unknown_event(fromUserName,event,event_key)
       else
-        worker.unknown_event(event,event_key)
+        worker.unknown_event(fromUserName,event,event_key)
       end
     else
       msg_id = xml.xpath("//MsgId").text
       case msg_type 
       when "text"
-        worker.text_callback(msg_id,xml.xpath("//PicUrl").text)
+        worker.text_callback(fromUserName,msg_id,xml.xpath("//PicUrl").text)
       when "image"
         args = {:pic=>xml.xpath("//PicUrl").text,
           :media_id=>xml.xpath("//MediaId").text}
-        worker.image_callback(msg_id,args)
+        worker.image_callback(fromUserName,msg_id,args)
       when "location"
         args = {:location=>{:lat=>xml.xpath("//Location_X").text,
           :lng=>xml.xpath("//Location_Y").text},
         :scale=>xml.xpath("//Scale").text,
         :lable=>xml.xpath("//Label").text}
-        worker.location_callback(msg_id,args)
+        worker.location_callback(fromUserName,msg_id,args)
       when "voice"
         args = {:format=>xml.xpath("//Format").text,
           :media_id=>xml.xpath("//MediaId").text}
-        worker.voice_callback(msg_id,args)
+        worker.voice_callback(fromUserName,msg_id,args)
       end
     end
   end
