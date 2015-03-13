@@ -110,10 +110,13 @@ class WechateClient
       when "click"
         worker.click_callback(event,event_key)
       when "scancode_push"
-      when "scancode_waitmsg"
+      when "scancode_waitmsg"      
         worker.scancode_callback(event,event_key,xml.xpath("//ScanResult").text)
       when "location_select"
-        
+      when "pic_photo_or_album"
+        worker.unknown_event(event,event_key)
+      else
+        worker.unknown_event(event,event_key)
       end
     else
       msg_id = xml.xpath("//MsgId").text

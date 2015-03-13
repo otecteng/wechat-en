@@ -24,4 +24,8 @@ class WechateWorker3
     "hi"
   end
 
+  def unknown_event(event,event_key)
+    "hi"
+  end
+
 end
